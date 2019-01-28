@@ -2,8 +2,7 @@
 
 const express = require('express');
 const service = express();
-const axios = require('axios');
-const { request, GraphQLClient } = require('graphql-request');
+const { GraphQLClient } = require('graphql-request');
 
 const client = new GraphQLClient(process.env.GRAPHQL_ENDPOINT);
 
