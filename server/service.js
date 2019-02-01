@@ -9,26 +9,32 @@ const client = new GraphQLClient(process.env.GRAPHQL_ENDPOINT);
 //initialize in-memory cache variable of all spell indices and names on startup
 let spellListCache;
 
-//graphQL request for cache
-client.request(`{ spells 
+function setSpellCache() {
+  //graphQL request for cache
+  client.request(`{ spells 
                   {
                     index
                     name
                   }
                 }`)
-  .then(res => {
-    // console.log('back with spells for cache:', res);
-    spellListCache = res;
-  })
-  .catch(err => console.log('error setting cached spell list:', err));
+    .then(res => {
+      console.log('back with spells for cache:', res);
+      spellListCache = res;
+    })
+    .catch(err => console.log('error setting cached spell list:', err.message));
+}
+
+setSpellCache();
 
 //handle spell requests from host app
 service.get('/service/spell/:spellName', async (req, res, next) => {
 
   const spellName = req.params.spellName;
   let spellMatch;
-  //find matching spell from cache by name
   try {
+    //if service is interrupted, reset cache
+    if (!spellListCache.spells) { await setSpellCache(); }
+    //find matching spell from cache by name
     spellMatch = spellListCache.spells.filter(spell => spell.name.includes(spellName));
   } catch (err) {
     console.log('Error retrieving spell from cache', err);

@@ -13,9 +13,9 @@ const server = service.listen(process.env.PORT, () => {
   //announce service to host application's service registry
   const announce = () => axios.put(`${process.env.HOST_BASE_URL}/service/spell/${server.address().port}`)
     .then(response => {
-      console.log(response.data);
+      console.log("Connected to service host", response.data);
     })
-    .catch(err => console.log('There was an error connecting to service host', err))
+    .catch(err => console.log('Error connecting to service host'))
 
   announce();
   //re-announce every 15 seconds
