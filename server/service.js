@@ -28,8 +28,9 @@ setSpellCache();
 
 //handle spell requests from host app
 service.get('/service/spell/:spellName', async (req, res, next) => {
-  console.log('incoming GET request for ' + spellName + 'from ' + req.headers['x-forwarded-for']);
   const spellName = req.params.spellName;
+  console.log('incoming GET request for ' + spellName + 'from ' + req.headers['x-forwarded-for']);
+
   let spellMatch;
   try {
     //if service is interrupted, reset cache
