@@ -11,9 +11,9 @@ const server = service.listen(process.env.PORT, () => {
   console.log(`dnd-slackbot-service is listening on port ${process.env.PORT} in ${service.get('env')} mode`);
 
   //announce service to host application's service registry
-  const announce = () => axios.put(`${process.env.HOST_BASE_URL}/service/spell/${server.address().port}`)
+  const announce = () => axios.put(`${process.env.HOST_BASE_URL}/service/spell/${process.env.SELF_URL}`)
     .then(response => {
-      console.log(`announced service to ${process.env.HOST_BASE_URL}/service/spell/${server.address().port}`);
+      console.log(`announced service to ${process.env.HOST_BASE_URL}/service/spell/${process.env.SELF_URL}`);
       console.log("Connected to service host", response.data);
     })
     .catch(err => console.log('Error connecting to service host'))
