@@ -29,12 +29,16 @@ setSpellCache();
 //handle spell requests from host app
 service.get('/service/spell/:spellName', async (req, res, next) => {
   const spellName = req.params.spellName;
-  console.log('incoming GET request for ' + spellName + 'from ' + req.headers['x-forwarded-for']);
+  console.log('incoming GET request for ' + spellName);
+
+  //if service is interrupted, reset cache
+  if (!spellListCache || !spellListCache.spells) {
+    console.log('resetting spell cache');
+    await setSpellCache();
+  }
 
   let spellMatch;
   try {
-    //if service is interrupted, reset cache
-    if (!spellListCache.spells) { await setSpellCache(); }
     //find matching spell from cache by name
     spellMatch = spellListCache.spells.filter(spell => spell.name.includes(spellName));
   } catch (err) {
